@@ -131,7 +131,7 @@ func main() {
 }
 
 func createStandardLayoutDirs() error {
-	var dirs [12]string = [12]string{
+	var dirs [3]string = [3]string{
 		"cmd",
 		"internal",
 		"pkg",
