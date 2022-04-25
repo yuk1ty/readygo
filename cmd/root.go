@@ -32,7 +32,11 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		runCmd(pkgName, name, style)
+		err = runCmd(pkgName, name, style)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	},
 }
 
