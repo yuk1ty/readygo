@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -148,15 +149,30 @@ func main() {
 }
 
 func createGitIgnore() error {
-	resp, err := http.Get("https://raw.github.com/github/gitignore/994f99fc353f523dfe5633067805a1dd4a53040f/Go.gitignore")
+	homedir, err := os.UserHomeDir()
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
-	gitignore, err := ioutil.ReadAll(resp.Body)
+	// Try to get `gibo`'s boilerplate. If it exists, keep reading the file.
+	// If not, try to get remote boilerplate on GitHub.
+	var gitignore string
+	giboBoilerplate, err := ioutil.ReadFile(filepath.Join(homedir, ".gitignore-boilerplates", "Go.gitignore"))
 	if err != nil {
-		return err
+		resp, err := http.Get("https://raw.github.com/github/gitignore/994f99fc353f523dfe5633067805a1dd4a53040f/Go.gitignore")
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+
+		gitignore = string(body)
+	} else {
+		gitignore = string(giboBoilerplate)
 	}
 
 	f, err := os.Create(".gitignore")
@@ -165,7 +181,7 @@ func createGitIgnore() error {
 	}
 	defer f.Close()
 
-	_, err = f.WriteString(string(gitignore))
+	_, err = f.WriteString(gitignore)
 	if err != nil {
 		return err
 	}
