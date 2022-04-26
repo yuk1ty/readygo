@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -58,7 +59,9 @@ func parseDirectoryName(cmd *cobra.Command, pkgName *string) (*string, error) {
 		return nil, err
 	}
 	if name == "" {
-		name = *pkgName
+		// e.g. If passed `github.com/yuk1ty/readygo` then extract `readygo`
+		splitted := strings.Split(*pkgName, "/")
+		name = splitted[len(splitted)-1]
 	}
 	return &name, nil
 }
