@@ -3,6 +3,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
@@ -102,6 +104,11 @@ func runCmd(pkgName *string, dirName *string, style *string) error {
 		return err
 	}
 
+	err = createGitIgnore()
+	if err != nil {
+		return err
+	}
+
 	err = createMainGo()
 	if err != nil {
 		return err
@@ -137,6 +144,31 @@ func main() {
 		return err
 	}
 
+	return nil
+}
+
+func createGitIgnore() error {
+	resp, err := http.Get("https://raw.github.com/github/gitignore/994f99fc353f523dfe5633067805a1dd4a53040f/Go.gitignore")
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	gitignore, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(".gitignore")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.WriteString(string(gitignore))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
