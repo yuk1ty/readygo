@@ -132,7 +132,10 @@ func main() {
 	}
 	defer f.Close()
 
-	f.WriteString(mainGo)
+	_, err = f.WriteString(mainGo)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
