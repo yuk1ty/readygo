@@ -14,7 +14,15 @@ touch main.go
 is shortened as below by using `readygo`
 
 ```shell
-readygo -n example -p github.com/yuk1ty/example
+readygo -p github.com/yuk1ty/example
+```
+
+## Getting started
+
+Use `go install`.
+
+```
+go install github.com/yuk1ty/readygo@latest
 ```
 
 ## How to use
