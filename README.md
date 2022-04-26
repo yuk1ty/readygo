@@ -29,6 +29,8 @@ readygo -n example -p github.com/yuk1ty/example
 
 ### Examples
 
+#### Full
+
 ```shell
 readygo --name example --pkg-name github.com/yuk1ty/example
 ```
@@ -42,6 +44,8 @@ drwxr-xr-x  - a14926 25 4 17:17 .git
 .rw-r--r-- 42 a14926 25 4 17:17 go.mod
 .rw-r--r-- 72 a14926 25 4 17:17 main.go
 ```
+
+#### With layout style
 
 ```shell
 readygo -n example -p github.com/yuk1ty/example -s standard
@@ -58,4 +62,36 @@ drwxr-xr-x  - a14926 25 4 17:28 cmd
 drwxr-xr-x  - a14926 25 4 17:28 internal
 .rw-r--r-- 72 a14926 25 4 17:28 main.go
 drwxr-xr-x  - a14926 25 4 17:28 pkg
+```
+
+#### Omit `--name(-n)`
+
+```shell
+readygo -p github.com/yuk1ty/example
+```
+
+generates
+
+```shell
+cd example
+ls -la
+drwxr-xr-x  - a14926 25 4 17:17 .git
+.rw-r--r-- 42 a14926 25 4 17:17 go.mod
+.rw-r--r-- 72 a14926 25 4 17:17 main.go
+```
+
+The following one works fine as well.
+
+```shell
+readygo -p example
+```
+
+generates
+
+```shell
+cd example
+ls -la
+drwxr-xr-x  - a14926 25 4 17:17 .git
+.rw-r--r-- 42 a14926 25 4 17:17 go.mod
+.rw-r--r-- 72 a14926 25 4 17:17 main.go
 ```
