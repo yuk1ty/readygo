@@ -33,43 +33,65 @@ go install github.com/yuk1ty/readygo@latest
 
 - `--name` or `-n`: Name for the directory which is created by `readygo`. This option can be omitted.
 - `--pkg-name` or `-p`: Package name for `go mod init` command.
-- `--style`: Directory layout style. You can choose [Standard Go Project Layout](https://github.com/golang-standards/project-layout) style (`standard`) or empty style (`default`). This option can be omitted. The default value is `default`, creates an empty directory.
+- `--layout` or `-l`: Directory layout style. You can choose [Standard Go Project Layout](https://github.com/golang-standards/project-layout) style (`standard`) or empty style (`default`). This option can be omitted. The default value is `default`, creates an empty directory.
 
 ### Examples
+
+```
+readygo --help
+Usage:
+  readygo [flags]
+
+Flags:
+  -h, --help              help for readygo
+  -l, --layout default    Define your project layout. You can choose default or `standard`. If you omit this option, the value becomes `default`. (default "default")
+  -n, --name string       Define the directory name of your project. This can be omitted. If you do so, name will be extracted from package name.
+  -p, --pkg-name string   Define your package name. This is used for go mod init [module path].
+```
 
 #### Full
 
 ```shell
-readygo --name example --pkg-name github.com/yuk1ty/example
+readygo --name newprj --pkg-name github.com/yuk1ty/example
 ```
 
 generates
 
 ```shell
-cd example
-ls -la
-drwxr-xr-x  - a14926 25 4 17:17 .git
-.rw-r--r-- 42 a14926 25 4 17:17 go.mod
-.rw-r--r-- 72 a14926 25 4 17:17 main.go
+ls -a --tree --level 1 newprj
+newprj
+├── .git
+├── .gitignore
+├── go.mod
+└── main.go
+```
+
+and its `go.mod` is to be as below:
+
+```shell
+module github.com/yuk1ty/example
+
+go 1.18
 ```
 
 #### With layout style
 
 ```shell
-readygo -n example -p github.com/yuk1ty/example -s standard
+readygo -n example -p github.com/yuk1ty/example -l standard
 ```
 
 generates
 
 ```shell
-cd example
-ls -la
-drwxr-xr-x  - a14926 25 4 17:28 .git
-drwxr-xr-x  - a14926 25 4 17:28 cmd
-.rw-r--r-- 42 a14926 25 4 17:28 go.mod
-drwxr-xr-x  - a14926 25 4 17:28 internal
-.rw-r--r-- 72 a14926 25 4 17:28 main.go
-drwxr-xr-x  - a14926 25 4 17:28 pkg
+ls -a --tree --level 1 example
+example
+├── .git
+├── .gitignore
+├── cmd
+├── go.mod
+├── internal
+├── main.go
+└── pkg
 ```
 
 #### Omit `--name(-n)`
@@ -81,14 +103,15 @@ readygo -p github.com/yuk1ty/example
 generates
 
 ```shell
-cd example
-ls -la
-drwxr-xr-x  - a14926 25 4 17:17 .git
-.rw-r--r-- 42 a14926 25 4 17:17 go.mod
-.rw-r--r-- 72 a14926 25 4 17:17 main.go
+ls -a --tree --level 1 example
+example
+├── .git
+├── .gitignore
+├── go.mod
+└── main.go
 ```
 
-The following one works fine as well.
+The following one (illustrates the case that is not starting with `github.com/username`) works fine as well.
 
 ```shell
 readygo -p example
@@ -97,9 +120,10 @@ readygo -p example
 generates
 
 ```shell
-cd example
-ls -la
-drwxr-xr-x  - a14926 25 4 17:17 .git
-.rw-r--r-- 42 a14926 25 4 17:17 go.mod
-.rw-r--r-- 72 a14926 25 4 17:17 main.go
+ls -a --tree --level 1 example
+example
+├── .git
+├── .gitignore
+├── go.mod
+└── main.go
 ```
