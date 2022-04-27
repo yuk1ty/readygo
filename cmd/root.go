@@ -30,13 +30,13 @@ var rootCmd = &cobra.Command{
 			return
 		}
 
-		style, err := parseStyle(cmd)
+		layout, err := parseLayout(cmd)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		err = runCmd(pkgName, name, style)
+		err = runCmd(pkgName, name, layout)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -69,20 +69,25 @@ func parseDirectoryName(cmd *cobra.Command, pkgName *string) (*string, error) {
 	return &name, nil
 }
 
-func parseStyle(cmd *cobra.Command) (*string, error) {
-	style, err := cmd.Flags().GetString("style")
+const (
+	Default  = "default"
+	Standard = "standard"
+)
+
+func parseLayout(cmd *cobra.Command) (*string, error) {
+	layout, err := cmd.Flags().GetString("layout")
 	if err != nil {
 		return nil, err
 	}
 
-	if style != "default" && style != "standard" {
-		return nil, errors.New("[ERROR] Style name should be `default` or `standard`")
+	if layout != Default && layout != Standard {
+		return nil, fmt.Errorf("[ERROR] Layout name should be `%s` or `%s`", Default, Standard)
 	}
 
-	return &style, nil
+	return &layout, nil
 }
 
-func runCmd(pkgName *string, dirName *string, style *string) error {
+func runCmd(pkgName *string, dirName *string, layout *string) error {
 	err := os.Mkdir(*dirName, 0777)
 	if err != nil {
 		return err
@@ -115,7 +120,7 @@ func runCmd(pkgName *string, dirName *string, style *string) error {
 		return err
 	}
 
-	if *style == "standard" {
+	if *layout == Standard {
 		err = createStandardLayoutDirs()
 		if err != nil {
 			return err
@@ -212,7 +217,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringP("pkg-name", "p", "", "package")
-	rootCmd.Flags().StringP("name", "n", "", "directory name")
-	rootCmd.Flags().StringP("style", "s", "default", "workspace architecture")
+	rootCmd.Flags().StringP("pkg-name", "p", "", "Define your package name. This is used for go mod init [module path].")
+	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, name will be extracted from package name.")
+	rootCmd.Flags().StringP("layout", "l", "default", "Define your project layout. You can choose `default` or `standard`. If you omit this option, the value becomes `default`.")
 }
