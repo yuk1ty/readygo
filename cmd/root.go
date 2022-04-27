@@ -51,7 +51,7 @@ func parsePackageName(cmd *cobra.Command) (*string, error) {
 		return nil, err
 	}
 	if pkgName == "" {
-		return nil, errors.New("[ERROR] Package name should be set! Please use `--pkg-name` option")
+		return nil, errors.New("[ERROR] Package name should be set! Please use `--pkg-name` option. For more details, please hit --help option")
 	}
 	return &pkgName, nil
 }
