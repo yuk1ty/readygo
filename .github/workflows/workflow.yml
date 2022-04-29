@@ -21,6 +21,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go build
+      - run: go test -timeout 30s github.com/yuk1ty/readygo/...
 
   lint:
     needs: build
