@@ -3,11 +3,8 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -154,39 +151,22 @@ func main() {
 }
 
 func createGitIgnore() error {
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-
-	// Try to get `gibo`'s boilerplate. If it exists, keep reading the file.
-	// If not, try to get remote boilerplate on GitHub.
-	var gitignore string
-	giboBoilerplate, err := ioutil.ReadFile(filepath.Join(homedir, ".gitignore-boilerplates", "Go.gitignore"))
-	if err != nil {
-		resp, err := http.Get("https://raw.github.com/github/gitignore/994f99fc353f523dfe5633067805a1dd4a53040f/Go.gitignore")
-		if err != nil {
-			return err
-		}
-		defer resp.Body.Close()
-
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return err
-		}
-
-		gitignore = string(body)
-	} else {
-		gitignore = string(giboBoilerplate)
-	}
-
+	gitignoreBoilerplate := `*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/	
+`
 	f, err := os.Create(".gitignore")
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	_, err = f.WriteString(gitignore)
+	_, err = f.WriteString(gitignoreBoilerplate)
 	if err != nil {
 		return err
 	}
@@ -218,6 +198,6 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringP("pkg-name", "p", "", "Define your package name. This is used for go mod init [module path].")
-	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, name will be extracted from package name.")
+	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, the name will be extracted from its package name.")
 	rootCmd.Flags().StringP("layout", "l", "default", "Define your project layout. You can choose `default` or `standard`. If you omit this option, the value becomes `default`.")
 }
