@@ -31,8 +31,8 @@ go install github.com/yuk1ty/readygo@latest
 
 `readygo` has the following options:
 
-- `--name` or `-n`: Name for the directory which is created by `readygo`. This option can be omitted.
-- `--pkg-name` or `-p`: Package name for `go mod init` command.
+- `--dir-name` or `-n`: Name for the directory which is created by `readygo`. This option can be omitted.
+- `--module-path` or `-p`: Module path for `go mod init` command.
 - `--layout` or `-l`: Directory layout style. You can choose [Standard Go Project Layout](https://github.com/golang-standards/project-layout) style (`standard`) or empty style (`default`). This option can be omitted. The default value is `default`, creates an empty directory.
 
 ### Examples
@@ -43,16 +43,16 @@ Usage:
   readygo [flags]
 
 Flags:
-  -h, --help              help for readygo
-  -l, --layout default    Define your project layout. You can choose default or `standard`. If you omit this option, the value becomes `default`. (default "default")
-  -n, --name string       Define the directory name of your project. This can be omitted. If you do so, name will be extracted from package name.
-  -p, --pkg-name string   Define your package name. This is used for go mod init [module path].
+  -n, --dir-name string      Define the directory name of your project. This can be omitted. If you do so, the name will be extracted from its package name.
+  -h, --help                 help for readygo
+  -l, --layout default       Define your project layout. You can choose default or `standard`. If you omit this option, the value becomes `default`. (default "default")
+  -p, --module-path string   Define your module path. This is used for go mod init [module path].
 ```
 
 #### Full
 
 ```shell
-readygo --name newprj --pkg-name github.com/yuk1ty/example
+readygo --dir-name newprj --module-path github.com/yuk1ty/example
 ```
 
 generates
@@ -94,7 +94,7 @@ example
 └── pkg
 ```
 
-#### Omit `--name(-n)`
+#### Omit `--dir-name(-n)`
 
 ```shell
 readygo -p github.com/yuk1ty/example
