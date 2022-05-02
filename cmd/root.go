@@ -198,6 +198,6 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringP("pkg-name", "p", "", "Define your package name. This is used for go mod init [module path].")
-	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, name will be extracted from package name.")
+	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, the name will be extracted from its package name.")
 	rootCmd.Flags().StringP("layout", "l", "default", "Define your project layout. You can choose `default` or `standard`. If you omit this option, the value becomes `default`.")
 }
