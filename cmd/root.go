@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Short: "The easiest way to get started with Go.",
 	Long:  `readygo is a tiny CLI tool for creating basic Go project.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		pkgName, err := parsePackageName(cmd)
+		pkgName, err := parsePackagePath(cmd)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -41,26 +41,26 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-func parsePackageName(cmd *cobra.Command) (*string, error) {
-	pkgName, err := cmd.Flags().GetString("pkg-name")
+func parsePackagePath(cmd *cobra.Command) (*string, error) {
+	pkgName, err := cmd.Flags().GetString("module-path")
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
 	if pkgName == "" {
-		return nil, errors.New("[ERROR] Package name should be set! Please use `--pkg-name` option. For more details, please hit --help option")
+		return nil, errors.New("[ERROR] Module path should be set! Please use `--module-path` option. For more details, please hit --help option")
 	}
 	return &pkgName, nil
 }
 
-func parseDirectoryName(cmd *cobra.Command, pkgName *string) (*string, error) {
-	name, err := cmd.Flags().GetString("name")
+func parseDirectoryName(cmd *cobra.Command, pkgPath *string) (*string, error) {
+	name, err := cmd.Flags().GetString("dir-name")
 	if err != nil {
 		return nil, err
 	}
 	if name == "" {
 		// e.g. If passed `github.com/yuk1ty/readygo` then extract `readygo`
-		splitted := strings.Split(*pkgName, "/")
+		splitted := strings.Split(*pkgPath, "/")
 		name = splitted[len(splitted)-1]
 	}
 	return &name, nil
@@ -197,7 +197,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringP("pkg-name", "p", "", "Define your package name. This is used for go mod init [module path].")
-	rootCmd.Flags().StringP("name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, the name will be extracted from its package name.")
+	rootCmd.Flags().StringP("module-path", "p", "", "Define your module path. This is used for go mod init [module path].")
+	rootCmd.Flags().StringP("dir-name", "n", "", "Define the directory name of your project. This can be omitted. If you do so, the name will be extracted from its package name.")
 	rootCmd.Flags().StringP("layout", "l", "default", "Define your project layout. You can choose `default` or `standard`. If you omit this option, the value becomes `default`.")
 }
